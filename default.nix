@@ -26,9 +26,10 @@ sh = dash.overrideAttrs (_: rec {
    rootfs = mkRootfs {
       name = "apache2-php53-rootfs";
       src = ./rootfs;
-      zendguard = zendguard53;
       inherit curl coreutils findutils apacheHttpdmpmITK apacheHttpd
         mjHttpErrorPages php53 postfix s6 execline mjperl5Packages;
+      zendguard = zendguard53;
+      zendopcache = php53Packages.zendopcache;
       ioncube = ioncube.v53;
       s6PortableUtils = s6-portable-utils;
       s6LinuxUtils = s6-linux-utils;
