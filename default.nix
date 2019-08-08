@@ -23,108 +23,12 @@ sh = dash.overrideAttrs (_: rec {
   '';
 });
 
-  zendguard = stdenv.mkDerivation rec {
-      name = "zend-guard-53";
-      src =  fetchurl {
-          url = "https://downloads.zend.com/guard/5.5.0/ZendGuardLoader-php-5.3-linux-glibc23-x86_64.tar.gz";
-          sha256 = "6982877fdd66ecdd684591a82c5aa702a09d92aac5a2c87e9781d40b76a30098";
-      };
-      installPhase = ''
-                  mkdir -p  $out/
-                  tar zxvf  ${src} -C $out/ ZendGuardLoader-php-5.3-linux-glibc23-x86_64/php-5.3.x/ZendGuardLoader.so
-      '';
-  };
-
-  pcre831 = stdenv.mkDerivation rec {
-      name = "pcre-8.31";
-      src = fetchurl {
-          url = "https://ftp.pcre.org/pub/pcre/${name}.tar.bz2";
-          sha256 = "0g4c0z4h30v8g8qg02zcbv7n67j5kz0ri9cfhgkpwg276ljs0y2p";
-      };
-      outputs = [ "out" ];
-      configureFlags = ''
-          --enable-jit
-      '';
-  };
-
-  libjpeg130 = stdenv.mkDerivation rec {
-     name = "libjpeg-turbo-1.3.0";
-     src = fetchurl {
-         url = "mirror://sourceforge/libjpeg-turbo/${name}.tar.gz";
-         sha256 = "0d0jwdmj3h89bxdxlwrys2mw18mqcj4rzgb5l2ndpah8zj600mr6";
-     };
-     buildInputs = [ nasm ];
-     doCheck = true;
-     checkTarget = "test";
- };
-
-  libpng12 = stdenv.mkDerivation rec {
-     name = "libpng-1.2.59";
-     src = fetchurl {
-        url = "mirror://sourceforge/libpng/${name}.tar.xz";
-        sha256 = "b4635f15b8adccc8ad0934eea485ef59cc4cae24d0f0300a9a941e51974ffcc7";
-     };
-     buildInputs = [ zlib ];
-     doCheck = true;
-     checkTarget = "test";
-  };
-
-  connectorc = stdenv.mkDerivation rec {
-     name = "mariadb-connector-c-${version}";
-     version = "6.1.0";
-
-     src = fetchurl {
-         url = "https://downloads.mysql.com/archives/get/file/mysql-connector-c-6.1.0-src.tar.gz";
-         sha256 = "0cifddg0i8zm8p7cp13vsydlpcyv37mz070v6l2mnvy0k8cng2na";
-         name   = "mariadb-connector-c-${version}-src.tar.gz";
-     };
-
-  # outputs = [ "dev" "out" ]; FIXME: cmake variables don't allow that < 3.0
-     cmakeFlags = [
-            "-DWITH_EXTERNAL_ZLIB=ON"
-            "-DMYSQL_UNIX_ADDR=/run/mysqld/mysqld.sock"
-     ];
-
-  # The cmake setup-hook uses $out/lib by default, this is not the case here.
-     preConfigure = stdenv.lib.optionalString stdenv.isDarwin ''
-             cmakeFlagsArray+=("-DCMAKE_INSTALL_NAME_DIR=$out/lib/mariadb")
-     '';
-
-     nativeBuildInputs = [ cmake ];
-     propagatedBuildInputs = [ openssl zlib ];
-     buildInputs = [ libiconv ];
-     enableParallelBuilding = true;
-  };
-
- imagemagick68 = stdenv.mkDerivation rec {
-  version = "6.8.8-7";
-    name = "ImageMagick-${version}";
-
-  src = fetchurl {
-    url = "https://mirror.sobukus.de/files/src/imagemagick/${name}.tar.xz";
-    sha256 = "1x5jkbrlc10rx7vm344j7xrs74c80xk3n1akqx8w5c194fj56mza";
-  };
-
-  enableParallelBuilding = true;
-
-  configureFlags = ''
-    --with-gslib
-    --with-frozenpaths
-    ${if librsvg != null then "--with-rsvg" else ""}
-  '';
-
-  buildInputs =
-    [ pkgconfig bzip2 fontconfig freetype libjpeg libpng libtiff libxml2 zlib librsvg
-      libtool jasper
-    ];
-
-  postInstall = ''(cd "$out/include" && ln -s ImageMagick* ImageMagick)'';
- };
-
    rootfs = mkRootfs {
       name = "apache2-php53-rootfs";
       src = ./rootfs;
-      inherit curl coreutils findutils apacheHttpdmpmITK apacheHttpd mjHttpErrorPages php53 postfix s6 execline zendguard connectorc mjperl5Packages ;
+      zendguard = zendguard53;
+      inherit curl coreutils findutils apacheHttpdmpmITK apacheHttpd
+        mjHttpErrorPages php53 postfix s6 execline mjperl5Packages;
       ioncube = ioncube.v53;
       s6PortableUtils = s6-portable-utils;
       s6LinuxUtils = s6-linux-utils;
