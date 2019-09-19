@@ -1,7 +1,64 @@
+{}:
+
 with import <nixpkgs> {
   overlays = [
     (import (builtins.fetchGit { url = "git@gitlab.intr:_ci/nixpkgs.git"; ref = "master"; }))
   ];
 };
 
-php53-image
+let
+  inherit (builtins) concatMap getEnv toJSON;
+  inherit (dockerTools) buildLayeredImage;
+  inherit (lib) concatMapStringsSep firstNChars flattenSet dockerRunCmd mkRootfs;
+  inherit (lib.attrsets) collect isDerivation;
+  inherit (stdenv) mkDerivation;
+
+  php53DockerArgHints = lib.phpDockerArgHints php.php53;
+
+  rootfs = mkRootfs {
+    name = "apache2-rootfs";
+    src = ./rootfs;
+    zendguard = zendguard.loader-php53;
+    zendopcache = phpPackages.php53Packages.zendopcache;
+    inherit curl coreutils findutils apacheHttpdmpmITK apacheHttpd
+      mjHttpErrorPages postfix s6 execline;
+    php53 = php.php53;
+    mjperl5Packages = mjperl5lib;
+    ioncube = ioncube.v53;
+    s6PortableUtils = s6-portable-utils;
+    s6LinuxUtils = s6-linux-utils;
+    mimeTypes = mime-types;
+    libstdcxx = gcc-unwrapped.lib;
+  };
+
+in
+
+pkgs.dockerTools.buildLayeredImage rec {
+  maxLayers = 124;
+  name = "docker-registry.intr/webservices/apache2-php53";
+  tag = "latest";
+  contents = [
+    rootfs
+    tzdata
+    locale
+    postfix
+    sh
+    coreutils
+    perl
+  ] ++ collect isDerivation phpPackages.php53Packages;
+  config = {
+    Entrypoint = [ "${rootfs}/init" ];
+    Env = [
+      "TZ=Europe/Moscow"
+      "TZDIR=${tzdata}/share/zoneinfo"
+      "LOCALE_ARCHIVE_2_27=${locale}/lib/locale/locale-archive"
+      "LOCALE_ARCHIVE=${locale}/lib/locale/locale-archive"
+      "LC_ALL=en_US.UTF-8"
+    ];
+    Labels = flattenSet rec {
+      ru.majordomo.docker.arg-hints-json = builtins.toJSON php53DockerArgHints;
+      ru.majordomo.docker.cmd = dockerRunCmd php53DockerArgHints "${name}:${tag}";
+      ru.majordomo.docker.exec.reload-cmd = "${apacheHttpd}/bin/httpd -d ${rootfs}/etc/httpd -k graceful";
+    };
+  };
+}
