@@ -13,7 +13,7 @@ let
   inherit (lib.attrsets) collect isDerivation;
   inherit (stdenv) mkDerivation;
 
-  php53DockerArgHints = lib.phpDockerArgHints php.php53;
+  php53DockerArgHints = lib.phpDockerArgHints phpDeprecated.php53;
 
   rootfs = mkRootfs {
     name = "apache2-rootfs";
@@ -22,7 +22,7 @@ let
     zendopcache = phpPackages.php53Packages.zendopcache;
     inherit curl coreutils findutils apacheHttpdmpmITK apacheHttpd
       mjHttpErrorPages postfix s6 execline;
-    php53 = php.php53;
+    php53 = phpDeprecated.php53;
     mjperl5Packages = mjperl5lib;
     ioncube = ioncube.v53;
     s6PortableUtils = s6-portable-utils;
