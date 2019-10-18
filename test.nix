@@ -5,7 +5,7 @@ with import <nixpkgs> {
 };
 
 maketestPhp {
-  php = php.php53;
+  php = phpDeprecated.php53;
   image = callPackage ./default.nix {};
   rootfs = ./rootfs;
 }
