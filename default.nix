@@ -19,7 +19,7 @@ let
     name = "apache2-rootfs";
     src = ./rootfs;
     zendguard = zendguard.loader-php53;
-    zendopcache = phpPackages.php53Packages.zendopcache;
+    zendopcache = phpDeprecatedPackages.php53Packages.zendopcache;
     inherit curl coreutils findutils apacheHttpdmpmITK apacheHttpd
       mjHttpErrorPages postfix s6 execline;
     php53 = phpDeprecated.php53;
@@ -48,7 +48,7 @@ pkgs.dockerTools.buildLayeredImage rec {
     (optipng.override{ inherit libpng ;})
     gifsicle cacert
     perl
-  ] ++ collect isDerivation phpPackages.php53Packages;
+  ] ++ collect isDerivation phpDeprecatedPackages.php53Packages;
   config = {
     Entrypoint = [ "${rootfs}/init" ];
     Env = [
