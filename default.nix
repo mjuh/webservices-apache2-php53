@@ -16,7 +16,7 @@ let
   php53DockerArgHints = lib.phpDockerArgHints phpDeprecated.php53;
 
   rootfs = mkRootfs {
-    name = "apache2-rootfs";
+    name = "apache2-rootfs-php53";
     src = ./rootfs;
     zendguard = zendguard.loader-php53;
     zendopcache = phpDeprecatedPackages.php53Packages.zendopcache;
