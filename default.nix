@@ -21,7 +21,8 @@ let
     zendguard = zendguard.loader-php53;
     zendopcache = phpDeprecatedPackages.php53Packages.zendopcache;
     inherit curl coreutils findutils apacheHttpdmpmITK apacheHttpd
-      mjHttpErrorPages postfix s6 execline;
+      mjHttpErrorPages s6 execline;
+                                   postfix = sendmail;
     php53 = phpDeprecated.php53;
     mjperl5Packages = mjperl5lib;
     ioncube = ioncube.v53;
@@ -50,7 +51,7 @@ pkgs.dockerTools.buildLayeredImage rec {
     rootfs
     tzdata
     locale
-    postfix
+                                  sendmail
     sh
     coreutils
     libjpeg_turbo
