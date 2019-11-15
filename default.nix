@@ -22,7 +22,7 @@ let
     zendopcache = phpDeprecatedPackages.php53Packages.zendopcache;
     inherit curl coreutils findutils apacheHttpdmpmITK apacheHttpd
       mjHttpErrorPages s6 execline;
-                                   postfix = sendmail;
+    postfix = sendmail;
     php53 = phpDeprecated.php53;
     mjperl5Packages = mjperl5lib;
     ioncube = ioncube.v53;
@@ -42,10 +42,11 @@ pkgs.dockerTools.buildLayeredImage rec {
     rootfs
     tzdata
     locale
-                                  sendmail
+    sendmail
     sh
     coreutils
     libjpeg_turbo
+    jpegoptim
     (optipng.override{ inherit libpng ;})
     gifsicle nss-certs.unbundled zip
     perl
