@@ -20,7 +20,7 @@ let
     src = ./rootfs;
     zendguard = zendguard.loader-php53;
     zendopcache = phpDeprecatedPackages.php53Packages.zendopcache;
-    inherit curl coreutils findutils apacheHttpdmpmITK apacheHttpd
+    inherit zlib curl coreutils findutils apacheHttpdmpmITK apacheHttpd
       mjHttpErrorPages s6 execline;
     postfix = sendmail;
     php53 = phpDeprecated.php53;
