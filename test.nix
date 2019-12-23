@@ -112,10 +112,5 @@ in maketestPhp {
         image = image.imageName;
       };
     })
-    (dockerNodeTest {
-      description = "Run mariadb connector test.";
-      action = "succeed";
-      command = "${testPhpMariadbConnector}";
-    })
   ];
 } { }
