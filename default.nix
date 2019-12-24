@@ -34,7 +34,6 @@ let
 in
 
 pkgs.dockerTools.buildLayeredImage rec {
-  maxLayers = 124;
   name = "docker-registry.intr/webservices/apache2-php53";
   tag = "latest";
   contents = [
