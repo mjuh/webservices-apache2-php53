@@ -1,4 +1,5 @@
 [
+  "root['extensions'][57]" #memcache
   "root['includedFiles']"
   "root['version']"
   "root['ini']['extension_dir']['global_value']"
