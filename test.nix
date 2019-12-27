@@ -22,7 +22,6 @@ in maketestPhp {
   php = php53;
   inherit containerStructureTestConfig;
   rootfs = ./rootfs;
-  defaultTestSuite = false;
   testSuite = [
     (dockerNodeTest {
       description = "Copy phpinfo.";
