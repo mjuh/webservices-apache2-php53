@@ -13,7 +13,7 @@ let
   inherit (lib.attrsets) collect isDerivation;
   inherit (stdenv) mkDerivation;
 
-  php53DockerArgHints = lib.phpDockerArgHints php53;
+  php53DockerArgHints = lib.phpDockerArgHints { php = php53; };
 
   rootfs = mkRootfs {
     name = "apache2-rootfs-php53";
