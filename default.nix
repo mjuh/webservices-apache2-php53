@@ -22,7 +22,7 @@ let
     zendguard = zendguard.loader-php53;
     zendopcache = php53Packages.zendopcache;
     inherit zlib curl coreutils findutils apacheHttpdmpmITK apacheHttpd
-      mjHttpErrorPages s6 execline php53;
+      mjHttpErrorPages s6 execline php53 logger;
     postfix = sendmail;
     mjperl5Packages = mjperl5lib;
     ioncube = ioncube.v53;
@@ -53,6 +53,7 @@ pkgs.dockerTools.buildLayeredImage rec {
     glibc
     zlib
     mariadbConnectorC
+    logger
     perl520
   ]
   ++ collect isDerivation php53Packages
