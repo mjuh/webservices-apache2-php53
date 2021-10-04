@@ -1,4 +1,4 @@
-{ nixpkgs ? (import ./common.nix).nixpkgs }:
+{ nixpkgs }:
 
 with nixpkgs;
 
