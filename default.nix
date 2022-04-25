@@ -17,8 +17,7 @@ let
     zendguard = zendguard.loader-php53;
     zendopcache = php53Packages.zendopcache;
     inherit zlib curl coreutils findutils apacheHttpdmpmITK apacheHttpd
-      s6 execline php53 logger;
-    mjHttpErrorPages = mj-http-error-pages;
+      mjHttpErrorPages s6 execline php53 logger;
     postfix = sendmail;
     mjperl5Packages = mjperl5lib;
     ioncube = ioncube.v53;
@@ -35,19 +34,16 @@ pkgs.dockerTools.buildLayeredImage rec {
   tag = "latest";
   contents = [
     rootfs
-    tzdata
-    apacheHttpd
+    tzdata apacheHttpd
     locale
     sendmail
     sh
     coreutils
     libjpeg_turbo
     jpegoptim
-    (optipng.override { inherit libpng; })
+    (optipng.override{ inherit libpng ;})
     imagemagick
-    gifsicle
-    nss-certs.unbundled
-    zip
+    gifsicle nss-certs.unbundled zip
     gcc-unwrapped.lib
     glibc
     zlib
@@ -74,18 +70,18 @@ pkgs.dockerTools.buildLayeredImage rec {
       ru.majordomo.docker.exec.reload-cmd = "${apacheHttpd}/bin/httpd -d ${rootfs}/etc/httpd -k graceful";
     };
   };
-  extraCommands = ''
-    set -xe
-    ls
-    mkdir -p etc
-    mkdir -p bin
-    chmod u+w usr
-    mkdir -p usr/local
-    mkdir -p opt
-    ln -s ${php53} opt/php53
-    ln -s /bin usr/sbin
-    ln -s /bin usr/local/bin
-    mkdir tmp
-    chmod 1777 tmp
-  '';
+    extraCommands = ''
+      set -xe
+      ls
+      mkdir -p etc
+      mkdir -p bin
+      chmod u+w usr
+      mkdir -p usr/local
+      mkdir -p opt
+      ln -s ${php53} opt/php53
+      ln -s /bin usr/sbin
+      ln -s /bin usr/local/bin
+      mkdir tmp
+      chmod 1777 tmp
+    '';
 }
